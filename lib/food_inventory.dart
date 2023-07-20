@@ -33,7 +33,7 @@ class _FoodInventoryState extends State<FoodInventory> {
 
   // This function will be triggered when the floating button is pressed
   // It will also be triggered when you want to update an item
-  void showMyForm(int? id) async {
+  void showCustomForm(int? id) async {
     if (id != null) {
       // id == null -> create new item
       // id != null -> update an existing item
@@ -130,8 +130,10 @@ class _FoodInventoryState extends State<FoodInventory> {
       body: Center(
         child: Column(
           children: [
-            loadDataView(),
-            loadButtons(),
+            Expanded(child: loadDataView()),
+            Expanded(
+              child: loadButtons(),
+            ),
           ],
         ),
       ),
@@ -144,57 +146,71 @@ class _FoodInventoryState extends State<FoodInventory> {
             child: CircularProgressIndicator(),
           )
         : myData.isEmpty
-            ? const Center(child: Text("No Data Available!!!"))
+            ? const Center(
+                child: Text("Click \"Add Item\" Button",
+                    style: TextStyle(color: Colors.white)))
             : ListView.builder(
                 scrollDirection: Axis.vertical,
                 shrinkWrap: true,
                 itemCount: myData.length,
-                itemBuilder: (context, index) => Card(
-                  color: index % 2 == 0
-                      ? const Color.fromARGB(255, 0, 135, 245)
-                      : const Color.fromARGB(255, 0, 135, 255),
-                  margin: const EdgeInsets.all(15),
-                  child: ListTile(
-                      title: Text(myData[index]['title'],
-                          style: const TextStyle(
-                              color: Color.fromARGB(255, 216, 216, 216))),
-                      subtitle: Text(myData[index]['description'],
-                          style: const TextStyle(color: Colors.white)),
-                      trailing: SizedBox(
-                        width: 100,
-                        child: Row(
-                          children: [
-                            IconButton(
-                              icon: const Icon(Icons.edit),
-                              onPressed: () => showMyForm(myData[index]['id']),
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.delete),
-                              onPressed: () => deleteItem(myData[index]['id']),
-                            ),
-                          ],
-                        ),
-                      )),
-                ),
+                itemBuilder: getCard(),
               );
   }
 
   loadButtons() {
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.end,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
+        const Spacer(),
         ElevatedButton(
           onPressed: () {
             Navigator.pop(context);
           },
           child: const Text('Home'),
         ),
+        const Spacer(),
         ElevatedButton(
-          onPressed: () => showMyForm(null),
+          onPressed: () => showCustomForm(null),
+          child: const Text('Add Custom Item'),
+        ),
+        const Spacer(),
+        ElevatedButton(
+          onPressed: () => showCustomForm(null),
           child: const Text('Add Item'),
         ),
+        const Spacer(),
       ],
     );
+  }
+
+  getCard() {
+    return (context, index) => Card(
+          color: index % 2 == 0
+              ? const Color.fromARGB(255, 0, 135, 245)
+              : const Color.fromARGB(255, 0, 135, 255),
+          margin: const EdgeInsets.all(15),
+          child: ListTile(
+              title: Text(myData[index]['title'],
+                  style: const TextStyle(
+                      color: Color.fromARGB(255, 216, 216, 216))),
+              subtitle: Text(myData[index]['description'],
+                  style: const TextStyle(color: Colors.white)),
+              trailing: SizedBox(
+                width: 100,
+                child: Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.edit),
+                      onPressed: () => showCustomForm(myData[index]['id']),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.delete),
+                      onPressed: () => deleteItem(myData[index]['id']),
+                    ),
+                  ],
+                ),
+              )),
+        );
   }
 }
