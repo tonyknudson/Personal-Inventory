@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:inventory/food_inventory.dart';
+import 'package:inventory/segmented_button.dart';
 
 void main() {
   runApp(const MaterialApp(
@@ -23,23 +24,27 @@ class HomePage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          getInfoPanels(),
+          Expanded(flex: 9, child: getInfoPanels(context)),
           const Spacer(),
-          getFoodButton(context),
+          Expanded(flex: 1, child: getFoodButton(context)),
         ],
       ),
     );
   }
 
-  getInfoPanels() {
-    return const Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
+  getInfoPanels(context) {
+    return const Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
         Spacer(),
-        Text('Expiring Soon'),
+        Text('We move under cover and we move as one'),
+        Text('Through the night, we have one shot to live another day'),
+        Text('We cannot let a stray gunshot give us away'),
         Spacer(),
-        Text('Expired'),
+        Text('We will fight up close, seize the moment and stay in it'),
+        Text('It’s either that or meet the business end of a bayonet'),
+        Text('The code word is ‘Rochambeau,’ dig me?'),
         Spacer(),
       ],
     );
