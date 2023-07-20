@@ -6,6 +6,7 @@ void main() {
   runApp(const MaterialApp(
     title: 'Personal Inventory',
     home: HomePage(),
+    debugShowCheckedModeBanner: false,
   ));
 }
 
@@ -24,27 +25,62 @@ class HomePage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Expanded(flex: 9, child: getInfoPanels(context)),
+          const SizedBox(height: 20),
+          Expanded(flex: 2, child: getSegmentedButton()),
+          const Spacer(),
+          Expanded(flex: 12, child: getItemCardsByExpiration(context)),
           const Spacer(),
           Expanded(flex: 1, child: getFoodButton(context)),
+          const SizedBox(height: 20),
         ],
       ),
     );
   }
 
-  getInfoPanels(context) {
+  getSegmentedButton() {
+    return const SizedBox(height: 180, width: 380, child: SegmentedButtonApp());
+  }
+
+  getItemCardsByExpiration(context) {
     return const Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        Spacer(),
-        Text('We move under cover and we move as one'),
-        Text('Through the night, we have one shot to live another day'),
-        Text('We cannot let a stray gunshot give us away'),
-        Spacer(),
-        Text('We will fight up close, seize the moment and stay in it'),
-        Text('It’s either that or meet the business end of a bayonet'),
-        Text('The code word is ‘Rochambeau,’ dig me?'),
+        //Spacer(),
+        //getCard(),
+        Card(
+          color: /* index % 2 == 0
+              ?*/
+              Color.fromARGB(255, 0, 135, 245),
+          //: const Color.fromARGB(255, 0, 135, 255),
+          margin: EdgeInsets.all(15),
+          child: ListTile(
+              title: Text(
+                'Apple',
+                style: TextStyle(color: Colors.white),
+              ),
+              subtitle: Text(
+                '3 days',
+                style: TextStyle(color: Colors.white),
+              ),
+              tileColor: Color.fromARGB(255, 0, 135, 202),
+              trailing: SizedBox(
+                width: 100,
+                child: Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.edit),
+                      onPressed:
+                          null, //() => showCustomForm(myData[index]['id']),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.delete),
+                      onPressed: null, //() => deleteItem(myData[index]['id']),
+                    ),
+                  ],
+                ),
+              )),
+        ),
         Spacer(),
       ],
     );
@@ -62,5 +98,35 @@ class HomePage extends StatelessWidget {
         },
       ),
     );
+  }
+
+  getCard() {
+    return (context, index) => Card(
+          color: index % 2 == 0
+              ? const Color.fromARGB(255, 0, 135, 245)
+              : const Color.fromARGB(255, 0, 135, 255),
+          margin: const EdgeInsets.all(15),
+          child: const ListTile(
+              title: Text(/*myData[index][*/ 'title',
+                  style: TextStyle(color: Color.fromARGB(255, 216, 216, 216))),
+              subtitle: Text(/*myData[index][*/ 'description',
+                  style: TextStyle(color: Colors.white)),
+              trailing: SizedBox(
+                width: 100,
+                child: Row(
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.edit),
+                      onPressed:
+                          null, //() => showCustomForm(myData[index]['id']),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.delete),
+                      onPressed: null, //() => deleteItem(myData[index]['id']),
+                    ),
+                  ],
+                ),
+              )),
+        );
   }
 }

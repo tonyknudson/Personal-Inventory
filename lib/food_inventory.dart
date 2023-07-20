@@ -172,6 +172,11 @@ class _FoodInventoryState extends State<FoodInventory> {
         const Spacer(),
         ElevatedButton(
           onPressed: () => showCustomForm(null),
+          child: const Text('Clear'),
+        ),
+        const Spacer(),
+        ElevatedButton(
+          onPressed: () => showCustomForm(null),
           child: const Text('Add Custom Item'),
         ),
         const Spacer(),
