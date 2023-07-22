@@ -24,8 +24,17 @@ class _FoodInventoryState extends State<FoodInventory> {
       body: Center(
         child: Column(
           children: [
-            Expanded(child: loadDataView()),
-            Expanded(child: loadButtons()),
+            Expanded(
+              flex: 10,
+              child: loadDataView(),
+            ),
+//DELETE ME!!! <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+            ElevatedButton(
+              onPressed: () => populateTestData(),
+              child: const Text('DELETE ME!!!'),
+            ),
+//DELETE ME!!! <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<)
+            Expanded(flex: 1, child: loadButtons()),
           ],
         ),
       ),
@@ -116,6 +125,12 @@ class _FoodInventoryState extends State<FoodInventory> {
             ));
   }
 
+  //Insert test records into the database
+  Future<void> addTestData(title, desc) async {
+    await DatabaseHelper.createItem(title, desc);
+    _refreshData();
+  }
+
   // Insert a new data to the database
   Future<void> addItem() async {
     await DatabaseHelper.createItem(
@@ -160,13 +175,25 @@ class _FoodInventoryState extends State<FoodInventory> {
           )
         : foodRecord.isEmpty
             ? const Center(
-                child: Text("Click \"Add Item\" Button",
-                    style: TextStyle(color: Colors.white)))
-            : ListView.builder(
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                itemCount: foodRecord.length,
-                itemBuilder: getCard(),
+                child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text("Click \"Add Item\" Button",
+                      style: TextStyle(color: Colors.white)),
+                ],
+              ))
+            : Scrollbar(
+                child: SizedBox(
+                  height: double.maxFinite,
+                  child: ListView.builder(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    itemCount: foodRecord.length,
+                    itemBuilder: getCard(),
+                  ),
+                ),
               );
   }
 
@@ -343,5 +370,13 @@ class _FoodInventoryState extends State<FoodInventory> {
       },
       child: const Text('Cancel'),
     );
+  }
+
+  populateTestData() {
+    addTestData('Test Title 0', 'Test Desc 0');
+    addTestData('Test Title 1', 'Test Desc 1');
+    addTestData('Test Title 2', 'Test Desc 2');
+    addTestData('Test Title 3', 'Test Desc 3');
+    addTestData('Test Title 4', 'Test Desc 4');
   }
 }

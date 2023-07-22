@@ -1,0 +1,13 @@
+Add Functionality
+	food_inventory.dart
+		add item, add custom item -> add ability to add multiple custom items without needing to start over each time
+	database -> add pre-defined items
+	database -> allow for creation of custom pre-defined items
+		options: tabbed interface on the custom form
+	database & UI -> add expiration date functionality
+	main -> add list view per selected segment on segmentbutton
+
+Fix Functionality
+	food_inventory.dart
+		add item -> create screen for pre-defined items
+		change size of segmented button?
