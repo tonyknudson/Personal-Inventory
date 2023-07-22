@@ -232,7 +232,7 @@ class _FoodInventoryState extends State<FoodInventory> {
   getCard() {
     return (context, index) => Card(
           color: index % 2 == 0
-              ? const Color.fromARGB(255, 0, 135, 245)
+              ? Color.fromARGB(202, 0, 188, 245)
               : const Color.fromARGB(255, 0, 135, 255),
           margin: const EdgeInsets.all(15),
           child: ListTile(
@@ -246,11 +246,11 @@ class _FoodInventoryState extends State<FoodInventory> {
                 child: Row(
                   children: [
                     IconButton(
-                      icon: const Icon(Icons.edit),
+                      icon: const Icon(Icons.edit, color: Colors.white),
                       onPressed: () => showCustomForm(foodRecord[index]['id']),
                     ),
                     IconButton(
-                      icon: const Icon(Icons.delete),
+                      icon: const Icon(Icons.delete, color: Colors.white),
                       onPressed: () => deleteItem(foodRecord[index]['id']),
                     ),
                   ],
@@ -331,7 +331,22 @@ class _FoodInventoryState extends State<FoodInventory> {
               ),
               const SizedBox(height: 20),
               const Text('This will delete all of your saved entries\n'),
-              const Text('This cannot be reversed once completed'),
+              RichText(
+                text: const TextSpan(
+                    // Note: Styles for TextSpans must be explicitly defined.
+                    // Child text spans will inherit styles from parent
+                    style: TextStyle(
+                      fontSize: 14.0,
+                      color: Colors.black,
+                    ),
+                    children: <TextSpan>[
+                      TextSpan(text: 'This '),
+                      TextSpan(
+                          text: 'cannot be reversed ',
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      TextSpan(text: 'once completed'),
+                    ]),
+              ),
               const SizedBox(height: 15),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
