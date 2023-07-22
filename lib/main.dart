@@ -26,19 +26,17 @@ class HomePage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const SizedBox(height: 20),
-          Expanded(flex: 2, child: getSegmentedButton()),
-          const Spacer(),
-          Expanded(flex: 12, child: getItemCardsByExpiration(context)),
+          const Expanded(
+              flex: 2,
+              child: SizedBox(
+                  width: double.maxFinite, child: SegmentedButtonBar())),
+          Expanded(flex: 13, child: getItemCardsByExpiration(context)),
           const Spacer(),
           Expanded(flex: 1, child: getFoodButton(context)),
           const SizedBox(height: 20),
         ],
       ),
     );
-  }
-
-  getSegmentedButton() {
-    return const SizedBox(height: 180, width: 380, child: SegmentedButtonApp());
   }
 
   getItemCardsByExpiration(context) {

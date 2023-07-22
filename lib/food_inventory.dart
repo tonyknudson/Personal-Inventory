@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:inventory/database_helper.dart';
+import 'package:inventory/clearFoodRecordsDialog.dart';
 
 class FoodInventory extends StatefulWidget {
   const FoodInventory({Key? key}) : super(key: key);
@@ -10,14 +11,31 @@ class FoodInventory extends StatefulWidget {
 
 class _FoodInventoryState extends State<FoodInventory> {
   // All data
-  List<Map<String, dynamic>> myData = [];
+  List<Map<String, dynamic>> foodRecord = [];
 
   bool _isLoading = true;
   // This function is used to fetch all data from the database
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.blueGrey,
+      appBar: getAppBar(),
+      body: Center(
+        child: Column(
+          children: [
+            Expanded(child: loadDataView()),
+            Expanded(child: loadButtons()),
+          ],
+        ),
+      ),
+    );
+  }
+
   void _refreshData() async {
     final data = await DatabaseHelper.getItems();
     setState(() {
-      myData = data;
+      foodRecord = data;
       _isLoading = false;
     });
   }
@@ -37,7 +55,8 @@ class _FoodInventoryState extends State<FoodInventory> {
     if (id != null) {
       // id == null -> create new item
       // id != null -> update an existing item
-      final existingData = myData.firstWhere((element) => element['id'] == id);
+      final existingData =
+          foodRecord.firstWhere((element) => element['id'] == id);
       _titleController.text = existingData['title'];
       _descriptionController.text = existingData['description'];
     }
@@ -115,29 +134,23 @@ class _FoodInventoryState extends State<FoodInventory> {
   void deleteItem(int id) async {
     await DatabaseHelper.deleteItem(id);
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Successfully deleted!'), backgroundColor: Colors.green));
+        content: Text('Successfully deleted!'), backgroundColor: Colors.blue));
     _refreshData();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.blueGrey,
-      appBar: AppBar(
+  // Delete all items
+  void deleteAllItems() async {
+    await DatabaseHelper.deleteAllItems();
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Successfully deleted all items!'),
+        backgroundColor: Colors.blue));
+    _refreshData();
+  }
+
+  getAppBar() {
+    return AppBar(
         backgroundColor: const Color.fromARGB(255, 0, 135, 255),
-        title: const Text('Food Inventory'),
-      ),
-      body: Center(
-        child: Column(
-          children: [
-            Expanded(child: loadDataView()),
-            Expanded(
-              child: loadButtons(),
-            ),
-          ],
-        ),
-      ),
-    );
+        title: const Text('Food Inventory'));
   }
 
   loadDataView() {
@@ -145,14 +158,14 @@ class _FoodInventoryState extends State<FoodInventory> {
         ? const Center(
             child: CircularProgressIndicator(),
           )
-        : myData.isEmpty
+        : foodRecord.isEmpty
             ? const Center(
                 child: Text("Click \"Add Item\" Button",
                     style: TextStyle(color: Colors.white)))
             : ListView.builder(
                 scrollDirection: Axis.vertical,
                 shrinkWrap: true,
-                itemCount: myData.length,
+                itemCount: foodRecord.length,
                 itemBuilder: getCard(),
               );
   }
@@ -171,7 +184,7 @@ class _FoodInventoryState extends State<FoodInventory> {
         ),
         const Spacer(),
         ElevatedButton(
-          onPressed: () => showCustomForm(null),
+          onPressed: () => getClearDialog(),
           child: const Text('Clear'),
         ),
         const Spacer(),
@@ -196,10 +209,10 @@ class _FoodInventoryState extends State<FoodInventory> {
               : const Color.fromARGB(255, 0, 135, 255),
           margin: const EdgeInsets.all(15),
           child: ListTile(
-              title: Text(myData[index]['title'],
+              title: Text(foodRecord[index]['title'],
                   style: const TextStyle(
                       color: Color.fromARGB(255, 216, 216, 216))),
-              subtitle: Text(myData[index]['description'],
+              subtitle: Text(foodRecord[index]['description'],
                   style: const TextStyle(color: Colors.white)),
               trailing: SizedBox(
                 width: 100,
@@ -207,15 +220,128 @@ class _FoodInventoryState extends State<FoodInventory> {
                   children: [
                     IconButton(
                       icon: const Icon(Icons.edit),
-                      onPressed: () => showCustomForm(myData[index]['id']),
+                      onPressed: () => showCustomForm(foodRecord[index]['id']),
                     ),
                     IconButton(
                       icon: const Icon(Icons.delete),
-                      onPressed: () => deleteItem(myData[index]['id']),
+                      onPressed: () => deleteItem(foodRecord[index]['id']),
                     ),
                   ],
                 ),
               )),
         );
+  }
+
+  getClearDialog() {
+    return showDialog<String>(
+      context: context,
+      builder: (BuildContext context) => Dialog(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              const Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.warning),
+                  Text('Warning! ',
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                ],
+              ),
+              const SizedBox(height: 20),
+              const Text('This will delete all of your saved entries'),
+              const SizedBox(height: 15),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      getClearConfirmDialog();
+                    },
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red,
+                        textStyle: const TextStyle(fontSize: 14)),
+                    child: const Text('Delete All'),
+                  ),
+                  const SizedBox(width: 20),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text('Cancel'),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  getClearConfirmDialog() {
+    return showDialog<String>(
+      context: context,
+      builder: (BuildContext context) => Dialog(
+        backgroundColor: const Color.fromARGB(255, 255, 145, 0),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              const Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.warning),
+                  Text('Warning! ',
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                ],
+              ),
+              const SizedBox(height: 20),
+              const Text('This will delete all of your saved entries\n'),
+              const Text('This cannot be reversed once completed'),
+              const SizedBox(height: 15),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  getClearConfirmButton(),
+                  const SizedBox(width: 20),
+                  getClearCancelButton(),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  getClearConfirmButton() {
+    return ElevatedButton(
+      onPressed: () {
+        deleteAllItems();
+        Navigator.pop(context);
+        Navigator.pop(context);
+      },
+      style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.red,
+          textStyle: const TextStyle(fontSize: 14)),
+      child: const Text('Delete All'),
+    );
+  }
+
+  getClearCancelButton() {
+    return ElevatedButton(
+      onPressed: () {
+        Navigator.pop(context);
+        Navigator.pop(context);
+      },
+      child: const Text('Cancel'),
+    );
   }
 }
