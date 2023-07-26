@@ -282,9 +282,7 @@ class _FoodInventoryState extends State<FoodInventory> {
               title: Text(foodRecords[index]['label'],
                   style: const TextStyle(
                       color: Color.fromARGB(255, 216, 216, 216))),
-              subtitle: Text(
-                  foodRecords[index]
-                      ['category, purchaseDate, expirationDate, warningDate'],
+              subtitle: Text(foodRecords[index]['category'],
                   style: const TextStyle(color: Colors.white)),
               trailing: SizedBox(
                 width: 100,
