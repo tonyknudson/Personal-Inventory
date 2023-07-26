@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:inventory/food_inventory.dart';
+import 'package:inventory/food_inventory_screen.dart';
 import 'package:inventory/segmented_button.dart';
+import 'package:inventory/food_category.dart';
+import 'package:inventory/config_database_helper.dart';
+import 'package:inventory/string_utilities.dart';
+import 'package:inventory/category.dart';
 
 void main() {
   runApp(const MaterialApp(
@@ -26,10 +30,8 @@ class HomePage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const SizedBox(height: 20),
-          const Expanded(
-              flex: 2,
-              child: SizedBox(
-                  width: double.maxFinite, child: SegmentedButtonBar())),
+          const Expanded(flex: 2, child: SegmentedButtonBar()),
+          //Expanded(child: ToggleButton()),
           Expanded(flex: 13, child: getItemCardsByExpiration(context)),
           const Spacer(),
           Expanded(flex: 1, child: getFoodButton(context)),
@@ -40,7 +42,7 @@ class HomePage extends StatelessWidget {
   }
 
   getItemCardsByExpiration(context) {
-    return const Column(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
@@ -49,37 +51,66 @@ class HomePage extends StatelessWidget {
         Card(
           color: /* index % 2 == 0
               ?*/
-              Color.fromARGB(255, 0, 135, 245),
+              const Color.fromARGB(255, 0, 135, 245),
           //: const Color.fromARGB(255, 0, 135, 255),
-          margin: EdgeInsets.all(15),
+          margin: const EdgeInsets.all(15),
           child: ListTile(
-              title: Text(
-                'Apple',
-                style: TextStyle(color: Colors.white),
+              title: Row(
+                children: [
+                  SizedBox(
+                      width: 20,
+                      child:
+                          FoodCategory.getIcon(Category.fruit, Colors.green)),
+                  Text(
+                    '${StringUtils.getSpaces(1)}Apple',
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                ],
               ),
-              subtitle: Text(
+              subtitle: const Text(
                 '3 days',
                 style: TextStyle(color: Colors.white),
               ),
-              tileColor: Color.fromARGB(255, 0, 135, 202),
-              trailing: SizedBox(
+              tileColor: const Color.fromARGB(255, 0, 135, 202),
+              trailing: const SizedBox(
                 width: 100,
                 child: Row(
                   children: [
                     IconButton(
-                      icon: const Icon(Icons.edit),
+                      icon: Icon(Icons.edit, color: Colors.white),
                       onPressed:
-                          null, //() => showCustomForm(myData[index]['id']),
+                          null, //() => showCustomForm(foodRecord[index]['id']),
                     ),
                     IconButton(
-                      icon: const Icon(Icons.delete),
-                      onPressed: null, //() => deleteItem(myData[index]['id']),
+                      icon: Icon(Icons.delete, color: Colors.white),
+                      onPressed:
+                          null, //() => deleteItem(foodRecord[index]['id']),
                     ),
                   ],
                 ),
               )),
         ),
-        Spacer(),
+        const Spacer(),
+        //DELETE ME!!! <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+        SizedBox(
+          width: 400,
+          child: Row(
+            children: [
+              FoodCategory.getIcon(Category.frozen),
+              FoodCategory.getIcon(Category.meat, Colors.black),
+              FoodCategory.getIcon(Category.fruit, Colors.green),
+              FoodCategory.getIcon(Category.vegetable, Colors.amber),
+              FoodCategory.getIcon(Category.dairy, Colors.red),
+              FoodCategory.getIcon(Category.juice, Colors.orange),
+              FoodCategory.getIcon(Category.bread, Colors.brown),
+              FoodCategory.getIcon(Category.sandwich, Colors.blue),
+              FoodCategory.getIcon(null),
+            ],
+          ),
+        ),
+//DELETE ME!!! <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+        const Spacer(),
       ],
     );
   }
@@ -105,9 +136,9 @@ class HomePage extends StatelessWidget {
               : const Color.fromARGB(255, 0, 135, 255),
           margin: const EdgeInsets.all(15),
           child: const ListTile(
-              title: Text(/*myData[index][*/ 'title',
+              title: Text(/*foodRecord[index][*/ 'title',
                   style: TextStyle(color: Color.fromARGB(255, 216, 216, 216))),
-              subtitle: Text(/*myData[index][*/ 'description',
+              subtitle: Text(/*foodRecord[index][*/ 'description',
                   style: TextStyle(color: Colors.white)),
               trailing: SizedBox(
                 width: 100,
@@ -116,11 +147,12 @@ class HomePage extends StatelessWidget {
                     IconButton(
                       icon: Icon(Icons.edit),
                       onPressed:
-                          null, //() => showCustomForm(myData[index]['id']),
+                          null, //() => showCustomForm(foodRecord[index]['id']),
                     ),
                     IconButton(
                       icon: Icon(Icons.delete),
-                      onPressed: null, //() => deleteItem(myData[index]['id']),
+                      onPressed:
+                          null, //() => deleteItem(foodRecord[index]['id']),
                     ),
                   ],
                 ),

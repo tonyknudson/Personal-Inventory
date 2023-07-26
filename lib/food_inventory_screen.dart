@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:inventory/database_helper.dart';
-import 'package:inventory/clearFoodRecordsDialog.dart';
+import 'package:inventory/food_database_helper.dart';
+import 'package:inventory/string_utilities.dart';
+import 'package:inventory/config_database_helper.dart';
 
 class FoodInventory extends StatefulWidget {
   const FoodInventory({Key? key}) : super(key: key);
@@ -11,7 +12,7 @@ class FoodInventory extends StatefulWidget {
 
 class _FoodInventoryState extends State<FoodInventory> {
   // All data
-  List<Map<String, dynamic>> foodRecord = [];
+  List<Map<String, dynamic>> foodRecords = [];
 
   bool _isLoading = true;
   // This function is used to fetch all data from the database
@@ -31,9 +32,13 @@ class _FoodInventoryState extends State<FoodInventory> {
 //DELETE ME!!! <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
             ElevatedButton(
               onPressed: () => populateTestData(),
-              child: const Text('DELETE ME!!!'),
+              child: const Column(
+                children: [
+                  Text('DELETE ME!!!'),
+                ],
+              ),
             ),
-//DELETE ME!!! <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<)
+//DELETE ME!!! <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
             Expanded(flex: 1, child: loadButtons()),
           ],
         ),
@@ -42,9 +47,9 @@ class _FoodInventoryState extends State<FoodInventory> {
   }
 
   void _refreshData() async {
-    final data = await DatabaseHelper.getItems();
+    final data = await FoodDatabaseHelper.getFoodRecords();
     setState(() {
-      foodRecord = data;
+      foodRecords = data;
       _isLoading = false;
     });
   }
@@ -55,19 +60,26 @@ class _FoodInventoryState extends State<FoodInventory> {
     _refreshData(); // Loading the data when the app starts
   }
 
-  final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _labelController = TextEditingController();
+  final TextEditingController _categoryController = TextEditingController();
+  final TextEditingController _purchaseDateController = TextEditingController();
+  final TextEditingController _expirationDateController =
+      TextEditingController();
+  final TextEditingController _warningDateController = TextEditingController();
 
   // This function will be triggered when the floating button is pressed
-  // It will also be triggered when you want to update an item
+  // It will also be triggered when you want to update an food record
   void showCustomForm(int? id) async {
     if (id != null) {
-      // id == null -> create new item
-      // id != null -> update an existing item
+      // id == null -> create new food record
+      // id != null -> update an existing food record
       final existingData =
-          foodRecord.firstWhere((element) => element['id'] == id);
-      _titleController.text = existingData['title'];
-      _descriptionController.text = existingData['description'];
+          foodRecords.firstWhere((element) => element['id'] == id);
+      _labelController.text = existingData['label'];
+      _categoryController.text = existingData['category'];
+      _purchaseDateController.text = existingData['purchaseDate'];
+      _expirationDateController.text = existingData['expirationDate'];
+      _warningDateController.text = existingData['warningDate'];
     }
 
     showModalBottomSheet(
@@ -87,15 +99,37 @@ class _FoodInventoryState extends State<FoodInventory> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   TextField(
-                    controller: _titleController,
-                    decoration: const InputDecoration(hintText: 'Title'),
+                    controller: _labelController,
+                    decoration: const InputDecoration(hintText: 'label'),
                   ),
                   const SizedBox(
                     height: 10,
                   ),
                   TextField(
-                    controller: _descriptionController,
-                    decoration: const InputDecoration(hintText: 'Description'),
+                    controller: _categoryController,
+                    decoration: const InputDecoration(hintText: 'category'),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  TextField(
+                    controller: _purchaseDateController,
+                    decoration: const InputDecoration(hintText: 'purchaseDate'),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  TextField(
+                    controller: _expirationDateController,
+                    decoration:
+                        const InputDecoration(hintText: 'expirationDate'),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  TextField(
+                    controller: _warningDateController,
+                    decoration: const InputDecoration(hintText: 'warningDate'),
                   ),
                   const SizedBox(
                     height: 20,
@@ -104,16 +138,19 @@ class _FoodInventoryState extends State<FoodInventory> {
                     onPressed: () async {
                       // Save new data
                       if (id == null) {
-                        await addItem();
+                        await addFoodRecord();
                       }
 
                       if (id != null) {
-                        await updateItem(id);
+                        await updateFoodRecord(id);
                       }
 
                       // Clear the text fields
-                      _titleController.text = '';
-                      _descriptionController.text = '';
+                      _labelController.text = '';
+                      _categoryController.text = '';
+                      _purchaseDateController.text = '';
+                      _expirationDateController.text = '';
+                      _warningDateController.text = '';
 
                       // Close the bottom sheet
                       Navigator.of(context).pop();
@@ -126,38 +163,49 @@ class _FoodInventoryState extends State<FoodInventory> {
   }
 
   //Insert test records into the database
-  Future<void> addTestData(title, desc) async {
-    await DatabaseHelper.createItem(title, desc);
+  Future<void> addTestData(
+      label, category, purchaseDate, expirationDate, warningDate) async {
+    await FoodDatabaseHelper.createFoodRecord(
+        label, category, purchaseDate, expirationDate, warningDate);
     _refreshData();
   }
 
   // Insert a new data to the database
-  Future<void> addItem() async {
-    await DatabaseHelper.createItem(
-        _titleController.text, _descriptionController.text);
+  Future<void> addFoodRecord() async {
+    await FoodDatabaseHelper.createFoodRecord(
+        _labelController.text,
+        _categoryController.text,
+        _purchaseDateController.text,
+        _expirationDateController.text,
+        _warningDateController.text);
     _refreshData();
   }
 
   // Update an existing data
-  Future<void> updateItem(int id) async {
-    await DatabaseHelper.updateItem(
-        id, _titleController.text, _descriptionController.text);
+  Future<void> updateFoodRecord(int id) async {
+    await FoodDatabaseHelper.updateFoodRecord(
+        id,
+        _labelController.text,
+        _categoryController.text,
+        _purchaseDateController.text,
+        _expirationDateController.text,
+        _warningDateController.text);
     _refreshData();
   }
 
-  // Delete an item
-  void deleteItem(int id) async {
-    await DatabaseHelper.deleteItem(id);
+  // Delete a food record
+  void deleteFoodRecord(int id) async {
+    await FoodDatabaseHelper.deleteFoodRecord(id);
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('Successfully deleted!'), backgroundColor: Colors.blue));
     _refreshData();
   }
 
-  // Delete all items
-  void deleteAllItems() async {
-    await DatabaseHelper.deleteAllItems();
+  // Delete all food records
+  void deleteAllFoodRecords() async {
+    await FoodDatabaseHelper.deleteAllFoodRecords();
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Successfully deleted all items!'),
+        content: Text('Successfully deleted all food records!'),
         backgroundColor: Colors.blue));
     _refreshData();
   }
@@ -173,27 +221,22 @@ class _FoodInventoryState extends State<FoodInventory> {
         ? const Center(
             child: CircularProgressIndicator(),
           )
-        : foodRecord.isEmpty
-            ? const Center(
+        : foodRecords.isEmpty
+            ? Center(
                 child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text("Click \"Add Item\" Button",
-                      style: TextStyle(color: Colors.white)),
+                  StringUtils.getBoldPortionMessage(
+                      "Click", "\"Add Item\"", "Button",
+                      textColor: Colors.white),
                 ],
               ))
-            : Scrollbar(
-                child: SizedBox(
-                  height: double.maxFinite,
-                  child: ListView.builder(
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    scrollDirection: Axis.vertical,
-                    shrinkWrap: true,
-                    itemCount: foodRecord.length,
-                    itemBuilder: getCard(),
-                  ),
-                ),
+            : ListView.builder(
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                itemCount: foodRecords.length,
+                itemBuilder: getCard(),
               );
   }
 
@@ -229,17 +272,19 @@ class _FoodInventoryState extends State<FoodInventory> {
     );
   }
 
-  getCard() {
+  Card Function(dynamic, dynamic) getCard() {
     return (context, index) => Card(
           color: index % 2 == 0
-              ? Color.fromARGB(202, 0, 188, 245)
+              ? const Color.fromARGB(202, 0, 188, 245)
               : const Color.fromARGB(255, 0, 135, 255),
           margin: const EdgeInsets.all(15),
           child: ListTile(
-              title: Text(foodRecord[index]['title'],
+              title: Text(foodRecords[index]['label'],
                   style: const TextStyle(
                       color: Color.fromARGB(255, 216, 216, 216))),
-              subtitle: Text(foodRecord[index]['description'],
+              subtitle: Text(
+                  foodRecords[index]
+                      ['category, purchaseDate, expirationDate, warningDate'],
                   style: const TextStyle(color: Colors.white)),
               trailing: SizedBox(
                 width: 100,
@@ -247,11 +292,12 @@ class _FoodInventoryState extends State<FoodInventory> {
                   children: [
                     IconButton(
                       icon: const Icon(Icons.edit, color: Colors.white),
-                      onPressed: () => showCustomForm(foodRecord[index]['id']),
+                      onPressed: () => showCustomForm(foodRecords[index]['id']),
                     ),
                     IconButton(
                       icon: const Icon(Icons.delete, color: Colors.white),
-                      onPressed: () => deleteItem(foodRecord[index]['id']),
+                      onPressed: () =>
+                          deleteFoodRecord(foodRecords[index]['id']),
                     ),
                   ],
                 ),
@@ -259,7 +305,7 @@ class _FoodInventoryState extends State<FoodInventory> {
         );
   }
 
-  getClearDialog() {
+  Future getClearDialog() {
     return showDialog<String>(
       context: context,
       builder: (BuildContext context) => Dialog(
@@ -309,7 +355,7 @@ class _FoodInventoryState extends State<FoodInventory> {
     );
   }
 
-  getClearConfirmDialog() {
+  Future getClearConfirmDialog() {
     return showDialog<String>(
       context: context,
       builder: (BuildContext context) => Dialog(
@@ -330,23 +376,10 @@ class _FoodInventoryState extends State<FoodInventory> {
                 ],
               ),
               const SizedBox(height: 20),
-              const Text('This will delete all of your saved entries\n'),
-              RichText(
-                text: const TextSpan(
-                    // Note: Styles for TextSpans must be explicitly defined.
-                    // Child text spans will inherit styles from parent
-                    style: TextStyle(
-                      fontSize: 14.0,
-                      color: Colors.black,
-                    ),
-                    children: <TextSpan>[
-                      TextSpan(text: 'This '),
-                      TextSpan(
-                          text: 'cannot be reversed ',
-                          style: TextStyle(fontWeight: FontWeight.bold)),
-                      TextSpan(text: 'once completed'),
-                    ]),
-              ),
+              StringUtils.getBoldPortionMessage('This will delete all',
+                  foodRecords.length.toString(), 'of your saved entries\n'),
+              StringUtils.getBoldPortionMessage(
+                  'This', 'cannot be reversed', 'once completed'),
               const SizedBox(height: 15),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -363,10 +396,10 @@ class _FoodInventoryState extends State<FoodInventory> {
     );
   }
 
-  getClearConfirmButton() {
+  ElevatedButton getClearConfirmButton() {
     return ElevatedButton(
       onPressed: () {
-        deleteAllItems();
+        deleteAllFoodRecords();
         Navigator.pop(context);
         Navigator.pop(context);
       },
@@ -377,7 +410,7 @@ class _FoodInventoryState extends State<FoodInventory> {
     );
   }
 
-  getClearCancelButton() {
+  ElevatedButton getClearCancelButton() {
     return ElevatedButton(
       onPressed: () {
         Navigator.pop(context);
@@ -387,11 +420,16 @@ class _FoodInventoryState extends State<FoodInventory> {
     );
   }
 
-  populateTestData() {
-    addTestData('Test Title 0', 'Test Desc 0');
-    addTestData('Test Title 1', 'Test Desc 1');
-    addTestData('Test Title 2', 'Test Desc 2');
-    addTestData('Test Title 3', 'Test Desc 3');
-    addTestData('Test Title 4', 'Test Desc 4');
+  void populateTestData() {
+    addTestData(
+        'Food Item 0', 'Test category', '20230201', '20210201', '20200201');
+    addTestData(
+        'Food Item 1', 'Test category', '20230201', '20210201', '20200201');
+    addTestData(
+        'Food Item 2', 'Test category', '20230201', '20210201', '20200201');
+    addTestData(
+        'Food Item 3', 'Test category', '20230201', '20210201', '20200201');
+    addTestData(
+        'Food Item 4', 'Test category', '20230201', '20210201', '20200201');
   }
 }

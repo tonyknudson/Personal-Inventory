@@ -1,0 +1,29 @@
+Apple Icon
+<a href="https://www.flaticon.com/free-icons/fruit" title="fruit icons">Fruit icons created by Freepik - Flaticon</a>
+
+Brocolli Icon
+<a href="https://www.flaticon.com/free-icons/brocolli" title="brocolli icons">Brocolli icons created by Aranagraphics - Flaticon</a>
+
+Steak Icon
+<a href="https://www.flaticon.com/free-icons/meat" title="meat icons">Meat icons created by VectorPortal - Flaticon</a>
+
+Default Food Icon
+<a href="https://www.flaticon.com/free-icons/cutlery" title="cutlery icons">Cutlery icons created by edt.im - Flaticon</a>
+
+Frozen Food Icon
+<a href="https://www.flaticon.com/free-icons/frozen" title="frozen icons">Frozen icons created by Smashicons - Flaticon</a>
+
+Dairy Icon
+<a href="https://www.flaticon.com/free-icons/dairy-products" title="dairy products icons">Dairy products icons created by Ayub Irawan - Flaticon</a>
+
+Juice Icon
+<a href="https://www.flaticon.com/free-icons/juice" title="juice icons">Juice icons created by Freepik - Flaticon</a>
+
+Bread Icon
+<a href="https://www.flaticon.com/free-icons/bread" title="bread icons">Bread icons created by Freepik - Flaticon</a>
+
+Sandwich Icon
+<a href="https://www.flaticon.com/free-icons/sandwich" title="sandwich icons">Sandwich icons created by Freepik - Flaticon</a>
+
+Juice 2 Icon
+<a href="https://www.flaticon.com/free-icons/orange-juice" title="orange juice icons">Orange juice icons created by Muttaqin - Flaticon</a>

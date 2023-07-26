@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:inventory/string_utilities.dart';
 
 class SegmentedButtonBar extends StatelessWidget {
   const SegmentedButtonBar({super.key});
@@ -65,30 +66,31 @@ class _SingleChoiceState extends State<SingleChoice> {
   }
 
   getButtonSegments() {
-    return const <ButtonSegment<HomePageSegmentedButtonType>>[
+    int paddingSpaces = 3;
+    return <ButtonSegment<HomePageSegmentedButtonType>>[
       ButtonSegment<HomePageSegmentedButtonType>(
           value: HomePageSegmentedButtonType.warning,
           label: Text(
-            'Expiring',
-            style: TextStyle(color: Colors.white),
+            '${StringUtils.getSpaces(paddingSpaces)}Expiring${StringUtils.getSpaces(paddingSpaces)}',
+            style: const TextStyle(color: Colors.white),
           ),
           //icon: Icon(Icons.new_releases)),
-          icon: Icon(Icons.alarm)),
+          icon: const Icon(Icons.alarm)),
       ButtonSegment<HomePageSegmentedButtonType>(
           value: HomePageSegmentedButtonType.toss,
           label: Text(
-            'Expired',
-            style: TextStyle(color: Colors.white),
+            '${StringUtils.getSpaces(paddingSpaces)}Expired${StringUtils.getSpaces(paddingSpaces)}',
+            style: const TextStyle(color: Colors.white),
           ),
-          icon: Icon(Icons.warning)),
+          icon: const Icon(Icons.warning)),
       ButtonSegment<HomePageSegmentedButtonType>(
           value: HomePageSegmentedButtonType.recent,
           label: Text(
-            'Recent',
-            style: TextStyle(color: Colors.white),
+            '${StringUtils.getSpaces(paddingSpaces)}Recent${StringUtils.getSpaces(paddingSpaces)}',
+            style: const TextStyle(color: Colors.white),
           ),
           //icon: Icon(Icons.fiber_new)),
-          icon: Icon(Icons.access_time)),
+          icon: const Icon(Icons.access_time)),
     ];
   }
 }

@@ -1,13 +1,73 @@
 Add Functionality
 	food_inventory.dart
 		add item, add custom item -> add ability to add multiple custom items without needing to start over each time
-	database -> add pre-defined items
+	database -> add pre-defined items (config, with defaults)
 	database -> allow for creation of custom pre-defined items
 		options: tabbed interface on the custom form
 	database & UI -> add expiration date functionality
+      'warningDate': DateTime.now().add(Duration(days: 7)).toString(),
+      'tossDate': DateTime.now().add(Duration(days: 14)).toString()
 	main -> add list view per selected segment on segmentbutton
+	all -> add theme functionality/ dark mode
+	add icons for food categories - done 20230726
 
 Fix Functionality
 	food_inventory.dart
 		add item -> create screen for pre-defined items
 		change size of segmented button?
+		fix ListView not scrolling - fixed 20230722 1:42AM
+		change gap between items on listview?
+	main -> copy card corner radius from food_inventory
+		
+UI Design
+	pick default colors
+	pick icons for segmented button on home screen - done, pending meeting
+	pick Click Add Item Button text on food_inventory screen
+	
+	
+main() card design
+
+Expiring - items with less than <7_CONFIG> days until expiration
+_________________________________________________________
+|v-fruitLogo											|
+|	Apples (food_item_)							edit	|
+|	3 days (days ago purchased					delete	|
+|    		/ days until expiration)					|
+|														|
+
+
+Expired - items with less than <0_CONFIG> days until expiration
+_________________________________________________________
+|v- skullLogo											|
+|	Apples (food_item_)							edit	|
+|	"Expired" + days ago						delete	|
+|    													|
+|														|
+
+Recent- items purchased less than <7_CONFIG> days ago
+_________________________________________________________
+|v-fruitLogo											|
+|	Apples (food_item_)							edit	|
+|	0 days (since purchased)					delete	|
+|    													|
+|														|
+
+
+Database Design
+
+FoodRecords
+	id
+	label
+*	category (enum number)
+	purchaseDate
+	expirationDate
+	warningDays
+
+
+Config
+*	id
+	category
+	expirationDays
+		> calculated
+			expirationDate
+			warning = expirationDate -3 days
