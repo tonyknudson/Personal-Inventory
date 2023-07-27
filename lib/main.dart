@@ -57,60 +57,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  getItemCardsByExpiration(context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        //Spacer(),
-        //getCard(),
-        Card(
-          color: /* index % 2 == 0
-              ?*/
-              const Color.fromARGB(255, 0, 135, 245),
-          //: const Color.fromARGB(255, 0, 135, 255),
-          margin: const EdgeInsets.all(15),
-          child: ListTile(
-              title: Row(
-                children: [
-                  SizedBox(
-                      width: 20,
-                      child:
-                          FoodCategory.getIcon(Category.fruit, Colors.green)),
-                  Text(
-                    '${StringUtils.getSpaces(1)}Apple',
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                ],
-              ),
-              subtitle: const Text(
-                '3 days',
-                style: TextStyle(color: Colors.white),
-              ),
-              tileColor: const Color.fromARGB(255, 0, 135, 202),
-              trailing: const SizedBox(
-                width: 100,
-                child: Row(
-                  children: [
-                    IconButton(
-                      icon: Icon(Icons.edit, color: Colors.white),
-                      onPressed:
-                          null, //() => showCustomForm(foodRecord[index]['id']),
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.delete, color: Colors.white),
-                      onPressed:
-                          null, //() => deleteItem(foodRecord[index]['id']),
-                    ),
-                  ],
-                ),
-              )),
-        ),
-        const Spacer(),
-      ],
-    );
-  }
-
   getFoodButton(context) {
     return Center(
       child: ElevatedButton(
