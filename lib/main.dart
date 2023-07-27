@@ -34,7 +34,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    //_refreshData();
     return Scaffold(
       backgroundColor: Colors.blueGrey,
       appBar: AppBar(
@@ -45,13 +44,10 @@ class _HomePageState extends State<HomePage> {
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 20),
+          const SizedBox(height: 10),
           const SizedBox(height: 60, child: SegmentedButtonBar()),
-          const SizedBox(height: 20),
-          Expanded(flex: 15, child: loadDataView()),
-          const SizedBox(height: 20),
+          Expanded(child: loadDataView()),
           SizedBox(height: 50, child: getFoodButton(context)),
-          const SizedBox(height: 20),
         ],
       ),
     );
@@ -301,7 +297,7 @@ class _HomePageState extends State<HomePage> {
   Card Function(dynamic, dynamic) getCard() {
     return (context, index) => Card(
           color: getBackgroundColors(index),
-          margin: const EdgeInsets.all(15),
+          margin: const EdgeInsets.fromLTRB(15, 10, 15, 10),
           child: ListTile(
               title: getTitleLine(index),
               subtitle: getSubtitleLine(index),

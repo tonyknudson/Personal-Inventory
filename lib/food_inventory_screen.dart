@@ -276,7 +276,7 @@ class _FoodInventoryState extends State<FoodInventory> {
   Card Function(dynamic, dynamic) getCard() {
     return (context, index) => Card(
           color: getBackgroundColors(index),
-          margin: const EdgeInsets.all(15),
+          margin: const EdgeInsets.fromLTRB(15, 10, 15, 10),
           child: ListTile(
               title: getTitleLine(index),
               subtitle: getSubtitleLine(index),
