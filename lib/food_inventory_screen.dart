@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:inventory/food_database_helper.dart';
 import 'package:inventory/string_utilities.dart';
-import 'package:inventory/config_database_helper.dart';
+import 'package:inventory/food_category.dart';
 
 class FoodInventory extends StatefulWidget {
   const FoodInventory({Key? key}) : super(key: key);
@@ -279,9 +279,7 @@ class _FoodInventoryState extends State<FoodInventory> {
               : const Color.fromARGB(255, 0, 135, 255),
           margin: const EdgeInsets.all(15),
           child: ListTile(
-              title: Text(foodRecords[index]['label'],
-                  style: const TextStyle(
-                      color: Color.fromARGB(255, 216, 216, 216))),
+              title: getTitleLine(index),
               subtitle: Text(foodRecords[index]['category'],
                   style: const TextStyle(color: Colors.white)),
               trailing: SizedBox(
@@ -301,6 +299,17 @@ class _FoodInventoryState extends State<FoodInventory> {
                 ),
               )),
         );
+  }
+
+  dynamic getTitleLine(dynamic index) {
+    return Row(
+      children: [
+        FoodCategory.getIcon(
+            FoodCategory.getCategory(foodRecords[index]['category'])),
+        Text(StringUtils.getSpaces(1) + foodRecords[index]['label'],
+            style: const TextStyle(color: Color.fromARGB(255, 216, 216, 216))),
+      ],
+    );
   }
 
   Future getClearDialog() {
@@ -419,15 +428,24 @@ class _FoodInventoryState extends State<FoodInventory> {
   }
 
   void populateTestData() {
+    int i = 0;
+    addTestData('Bread ${i++}', 'bread', '20230201', '20210201', '20200201');
+    addTestData('Canned ${i++}', 'canned', '20230201', '20210201', '20200201');
+    addTestData('Cheese ${i++}', 'cheese', '20230201', '20210201', '20200201');
+    addTestData('Dairy ${i++}', 'dairy', '20230201', '20210201', '20200201');
+    addTestData('Dried ${i++}', 'dried', '20230201', '20210201', '20200201');
+    addTestData('Eggs ${i++}', 'eggs', '20230201', '20210201', '20200201');
+    addTestData('Fruit ${i++}', 'fruit', '20230201', '20210201', '20200201');
+    addTestData('Frozen ${i++}', 'frozen', '20230201', '20210201', '20200201');
+    addTestData('Juice ${i++}', 'juice', '20230201', '20210201', '20200201');
+    addTestData('Meat ${i++}', 'meat', '20230201', '20210201', '20200201');
+    addTestData('Milk ${i++}', 'milk', '20230201', '20210201', '20200201');
     addTestData(
-        'Food Item 0', 'Test category', '20230201', '20210201', '20200201');
+        'Sandwich ${i++}', 'sandwich', '20230201', '20210201', '20200201');
+    addTestData('Shelf ${i++}', 'shelf', '20230201', '20210201', '20200201');
     addTestData(
-        'Food Item 1', 'Test category', '20230201', '20210201', '20200201');
+        'Vegetable ${i++}', 'vegetable', '20230201', '20210201', '20200201');
     addTestData(
-        'Food Item 2', 'Test category', '20230201', '20210201', '20200201');
-    addTestData(
-        'Food Item 3', 'Test category', '20230201', '20210201', '20200201');
-    addTestData(
-        'Food Item 4', 'Test category', '20230201', '20210201', '20200201');
+        'Unknown ${i++}', 'bad_data', '20230201', '20210201', '20200201');
   }
 }

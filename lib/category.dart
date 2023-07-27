@@ -1,10 +1,17 @@
 enum Category {
   bread,
+  canned,
+  cheese,
   dairy,
+  dried,
+  eggs,
   fruit,
   frozen,
   juice,
   meat,
+  milk,
   sandwich,
+  shelf,
+  unknown,
   vegetable,
 }
