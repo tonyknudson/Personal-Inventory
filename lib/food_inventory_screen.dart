@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:inventory/food_database_helper.dart';
 import 'package:inventory/string_utilities.dart';
 import 'package:inventory/food_category.dart';
+import 'package:inventory/constants.dart';
 
 class FoodInventory extends StatefulWidget {
   const FoodInventory({Key? key}) : super(key: key);
@@ -274,39 +275,52 @@ class _FoodInventoryState extends State<FoodInventory> {
 
   Card Function(dynamic, dynamic) getCard() {
     return (context, index) => Card(
-          color: index % 2 == 0
-              ? const Color.fromARGB(202, 0, 188, 245)
-              : const Color.fromARGB(255, 0, 135, 255),
+          color: getBackgroundColors(index),
           margin: const EdgeInsets.all(15),
           child: ListTile(
               title: getTitleLine(index),
-              subtitle: Text(foodRecords[index]['category'],
-                  style: const TextStyle(color: Colors.white)),
+              subtitle: getSubtitleLine(index),
               trailing: SizedBox(
                 width: 100,
-                child: Row(
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.edit, color: Colors.white),
-                      onPressed: () => showCustomForm(foodRecords[index]['id']),
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.delete, color: Colors.white),
-                      onPressed: () =>
-                          deleteFoodRecord(foodRecords[index]['id']),
-                    ),
-                  ],
-                ),
+                child: getBody(index),
               )),
         );
+  }
+
+  Color getBackgroundColors(int index) {
+    return index % 2 == 0
+        ? const Color.fromARGB(202, 0, 188, 245)
+        : const Color.fromARGB(255, 0, 135, 255);
+  }
+
+  dynamic getBody(int index) {
+    return Row(
+      children: [
+        IconButton(
+          icon: const Icon(Icons.edit, color: Colors.white),
+          onPressed: () => showCustomForm(foodRecords[index][Constants.ID]),
+        ),
+        IconButton(
+          icon: const Icon(Icons.delete, color: Colors.white),
+          onPressed: () => deleteFoodRecord(foodRecords[index][Constants.ID]),
+        ),
+      ],
+    );
+  }
+
+  Text getSubtitleLine(index) {
+    return Text(
+        'Purchased:${StringUtils.getSpaces(1)}${StringUtils.formatDateMdyy(foodRecords[index][Constants.PURCHASE_DATE])}',
+        style: const TextStyle(color: Colors.white));
   }
 
   dynamic getTitleLine(dynamic index) {
     return Row(
       children: [
+        const SizedBox(height: 35),
         FoodCategory.getIcon(
-            FoodCategory.getCategory(foodRecords[index]['category'])),
-        Text(StringUtils.getSpaces(1) + foodRecords[index]['label'],
+            FoodCategory.getCategory(foodRecords[index][Constants.CATEGORY])),
+        Text(StringUtils.getSpaces(1) + foodRecords[index][Constants.LABEL],
             style: const TextStyle(color: Color.fromARGB(255, 216, 216, 216))),
       ],
     );

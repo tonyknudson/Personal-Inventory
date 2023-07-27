@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class StringUtils {
   static RichText getBoldPortionMessage(
@@ -41,5 +42,9 @@ class StringUtils {
 
   static String getSpaces(int count) {
     return ' ' * count;
+  }
+
+  static String formatDateMdyy(String date) {
+    return DateFormat('M/d/yy').format(DateTime.parse(date));
   }
 }

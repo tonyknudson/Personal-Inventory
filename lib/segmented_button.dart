@@ -52,7 +52,7 @@ class _SingleChoiceState extends State<SingleChoice> {
     );
   }
 
-  getButtonStyle() {
+  ButtonStyle getButtonStyle() {
     return ButtonStyle(
         backgroundColor: MaterialStateProperty.resolveWith<Color>(
           (Set<MaterialState> states) {
@@ -65,7 +65,7 @@ class _SingleChoiceState extends State<SingleChoice> {
         iconColor: MaterialStateProperty.all(Colors.white));
   }
 
-  getButtonSegments() {
+  List<ButtonSegment<HomePageSegmentedButtonType>> getButtonSegments() {
     int paddingSpaces = 3;
     return <ButtonSegment<HomePageSegmentedButtonType>>[
       ButtonSegment<HomePageSegmentedButtonType>(
